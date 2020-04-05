@@ -4,6 +4,7 @@ const plumber = require("gulp-plumber");
 const pug = require("gulp-pug");
 const rename = require('gulp-rename');
 const sass = require('gulp-sass');
+const autoprefixer = require('gulp-autoprefixer');
 
 const distDir = "./dist/";
 const srcDir = "./src/";
@@ -28,7 +29,13 @@ cssDistDir = distDir + 'css/';
 
 sassToCss = function () {
 	return src(sassSrcDir)
-		.pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
+		.pipe(
+			sass({
+				outputStyle: 'expanded', 
+				includePaths: './node_modules/bootstrap/scss'
+			})
+			.on('error', sass.logError))
+		.pipe(autoprefixer())
 		.pipe(dest(cssDistDir));
 };
 

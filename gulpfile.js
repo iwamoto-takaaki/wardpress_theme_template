@@ -2,7 +2,7 @@ const { src, dest, series, parallel, watch } = require('gulp');
 const notify = require("gulp-notify");
 const plumber = require("gulp-plumber");
 const pug = require("gulp-pug");
-var rename = require('gulp-rename');
+const rename = require('gulp-rename');
 
 const distDir = "./dist/";
 const srcDir = "./src/";

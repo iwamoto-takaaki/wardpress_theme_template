@@ -3,11 +3,12 @@ const notify = require("gulp-notify");
 const plumber = require("gulp-plumber");
 const pug = require("gulp-pug");
 const rename = require('gulp-rename');
+const sass = require('gulp-sass');
 
 const distDir = "./dist/";
 const srcDir = "./src/";
 
-pugSrc = srcDir + '**/*.*'
+pugSrc = srcDir + '**/*.*';
 pugToPhp = function () {
 	return src(srcDir + '**/*.php.pug')
         .pipe(pug({
@@ -20,12 +21,23 @@ pugToPhp = function () {
         .pipe(dest(distDir))
 };
 
-exports.pugToPhp = parallel(pugToPhp)
+exports.pugToPhp = parallel(pugToPhp);
+
+sassSrcDir = srcDir + '**/*.sass';
+cssDistDir = distDir + 'css/';
+
+sassToCss = function () {
+	return src(sassSrcDir)
+		.pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
+		.pipe(dest(cssDistDir));
+};
+
+exports.sassToCss = parallel(sassToCss);
 
 exports.watch = parallel(function() {
 	watch([srcDir], function(cp) {
-		console.log('watcher running');
 		this.pugToPhp();
+		this.sassToCss();
 		cp();
 	}); 
 });

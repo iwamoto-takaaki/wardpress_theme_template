@@ -9,9 +9,9 @@ const autoprefixer = require('gulp-autoprefixer');
 const distDir = "./dist/";
 const srcDir = "./src/";
 
-pugSrc = srcDir + '**/*.*';
+pugSrc = srcDir + '*.php.pug';
 pugToPhp = function () {
-	return src(srcDir + '**/*.php.pug')
+	return src(pugSrc)
         .pipe(pug({
             basedir: srcDir,
             pretty: true
@@ -24,7 +24,7 @@ pugToPhp = function () {
 
 exports.pugToPhp = parallel(pugToPhp);
 
-sassSrcDir = srcDir + '**/*.sass';
+sassSrcDir = srcDir + '/sass/**/*.sass';
 cssDistDir = distDir + 'css/';
 
 sassToCss = function () {
@@ -41,8 +41,23 @@ sassToCss = function () {
 
 exports.sassToCss = parallel(sassToCss);
 
+
+copyImages = function() {
+	return src([srcDir + 'images/*'])
+		.pipe(dest(distDir + 'images/'));
+};
+exports.copyImages = parallel(copyImages);
+
+copyJs = function() {
+	return src([srcDir + 'js/*'])
+		.pipe(dest(distDir + 'js/'));
+};
+exports.copyJs = parallel(copyJs);
+
 exports.watch = parallel(function() {
 	watch([srcDir], function(cp) {
+		this.copyImages();
+		this.copyJs();
 		this.pugToPhp();
 		this.sassToCss();
 		cp();
